@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "src/monitor_canister_backend"
+]
+resolver = "2"

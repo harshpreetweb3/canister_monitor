@@ -1,0 +1,27 @@
+{
+  "canisters": {
+    "monitor_canister_backend": {
+      "candid": "src/monitor_canister_backend/monitor_canister_backend.did",
+      "package": "monitor_canister_backend",
+      "type": "rust"
+    },
+    "monitor_canister_frontend": {
+      "dependencies": [
+        "monitor_canister_backend"
+      ],
+      "source": [
+        "src/monitor_canister_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "monitor_canister_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
