@@ -9,6 +9,7 @@
     "prebuild": "npm run prebuild --workspaces --if-present",
     "pretest": "npm run prebuild --workspaces --if-present",
     "start": "npm start --workspaces --if-present",
+    "did" : "/did.sh",
     "test": "npm test --workspaces --if-present"
   },
   "type": "module",
