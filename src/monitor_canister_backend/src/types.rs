@@ -3,12 +3,12 @@ use serde::Deserialize;
 use std::borrow::Cow;
 use ic_stable_structures::{storable::Bound,Storable};
 
-
-#[derive( CandidType,PartialEq,Deserialize, Debug, Clone)]
+//simple struct
+#[derive( CandidType, PartialEq, Deserialize, Debug, Clone)]
 pub struct CanisterData {
     pub cycles: Nat,
     pub memory_consumed: Nat,
-    pub module_hash: String,
+    pub module_hash: Vec<u8>,
 }
 
 const MAX_VALUE_SIZE: u32 = 100;
@@ -28,5 +28,6 @@ impl Storable for CanisterData {
         is_fixed_size: false,
     };
 }
+
 
 

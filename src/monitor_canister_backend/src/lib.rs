@@ -1,3 +1,4 @@
+// B-hole canister
 mod canister_status;
 mod store_canister_status;
 mod types;
@@ -17,73 +18,37 @@ use ic_cdk::{
     export_candid,
 };
 
-#[ic_cdk::query]
-fn greet(name: String) -> String {
-    format!("Hello, {}!", name)
-}
+// #[ic_cdk::query]
+// async fn get_storage() -> CallResult<(CanisterStatusResponse,)> {
 
-// get storage from canister_status 
+//     let id : CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
 
-#[ic_cdk::query]
-async fn get_storage() -> Result<
-    (management_canister::main::CanisterStatusResponse,),
-    (ic_cdk::api::call::RejectionCode, String),
-> {
+//     ic_cdk::println!("id : {}", id);    
 
-    let arg = CanisterIdRecord {
-        canister_id: Principal::from_text("ss2fx-dyaaa-aaaar-qacoq-cai").unwrap(),
-    };
+//     let arg = CanisterIdRecord {
+//         canister_id: id,
+//     };
 
-    let result: Result<
-        (management_canister::main::CanisterStatusResponse,),
-        (ic_cdk::api::call::RejectionCode, String),
-    > = canister_status(arg).await;
-
-    result
-}
-
-#[ic_cdk::query]
-async fn get_storage_2() -> CallResult<(CanisterStatusResponse,)> {
-
-    let id : CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
-
-    ic_cdk::println!("id : {}", id);    
-
-    let arg = CanisterIdRecord {
-        canister_id: id,
-    };
-
-    let result: CallResult<(CanisterStatusResponse,)> = canister_status(arg).await;
+//     let result: CallResult<(CanisterStatusResponse,)> = canister_status(arg).await;
     
-    result
-}
+//     result
+// }
 
-#[ic_cdk::query]
-async fn get_storage_3(arg : CanisterIdRecord) -> CallResult<(CanisterStatusResponse,)> {
-    let result: CallResult<(CanisterStatusResponse,)> = canister_status(arg).await;
-    result
-}
-
-#[ic_cdk::update]
-pub async fn get_canister_status(arg: CanisterIdRecord) -> CallResult<(CanisterStatusResponse,)> {
-    ic_cdk::call(Principal::management_canister(), "canister_status", (arg,)).await
-}
-
-
-
-
-// get remaining cycles from canister_status 
-
-
-
+// #[ic_cdk::update]
+// pub async fn get_canister_status(arg: CanisterIdRecord) -> CallResult<(CanisterStatusResponse,)> {
+//     ic_cdk::call(Principal::management_canister(), "canister_status", (arg,)).await
+// }
 
 
 //1. all matrices, fun for all mat..
 //2. store in a stable memory
 //3. each minute, call and store matric ; heartbeats
 //4, show matric // 5 minute, 10 min , from  frontend | graph
-//graph for each
+//   graph for each
 
-//get storage, get cycles
+//   get storage, get cycles, get module_hash
 
 export_candid!();
+
+
+// dfx canister update-settings monitor_canister_backend --add-controller bkyz2-fmaaa-aaaaa-qaaaq-cai// 

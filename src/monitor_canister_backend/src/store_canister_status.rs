@@ -1,25 +1,34 @@
-use ic_cdk::{update, query};
-use crate::{CanisterData, State, Principal};
+use crate::{CanisterData, Principal, State};
+use ic_cdk::{query, update};
 use std::cell::RefCell;
 
 thread_local! {
     static STATE: RefCell<State> = RefCell::new(State::new());
 }
 
-#[update(name = "insert_canister_info")]
-fn insert(canister_id : Principal, canister_data: CanisterData) -> Result<(), String> {
-    
+#[query(name = "set_canister_map")]
+fn set_canister_map(
+    canister_id: Principal,
+    can_data: CanisterData,
+) -> Result<(), String> {
     STATE.with(|state| {
         let mut state = state.borrow_mut();
-        state.set_canister_data(canister_id, canister_data)
+        state.insert_canister_info(canister_id, can_data)
     })
 }
 
-#[query(name = "get_canister_info")]
-fn fetch(canister_id : Principal) -> Result<CanisterData, String> {
-    // let user_principal = caller();
+#[query(name = "get_canister_map")]
+fn get_canister_map(canister_id: Principal, time: u64) -> Option<CanisterData> {
     STATE.with(|state| {
         let state = state.borrow();
-        state.get_canister_data(canister_id)
+        state.get_canister_info(canister_id, time)
+    })
+}
+
+#[query(name = "get_all_timestamps")]
+fn get_all_timestamps(canister_id: Principal) -> Vec<(u64, CanisterData)>  {
+    STATE.with(|state| {
+        let state = state.borrow();
+        state.get_all_the_timestamps(canister_id).collect()
     })
 }

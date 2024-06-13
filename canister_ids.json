@@ -1,0 +1,8 @@
+{
+  "monitor_canister_backend": {
+    "ic": "m33v6-caaaa-aaaan-qmmlq-cai"
+  },
+  "monitor_canister_frontend": {
+    "ic": "nwvrq-niaaa-aaaan-qmmma-cai"
+  }
+}

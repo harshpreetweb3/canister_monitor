@@ -1,60 +1,13 @@
 type CanisterData = record {
   cycles : nat;
   memory_consumed : nat;
-  module_hash : text;
+  module_hash : blob;
 };
-type CanisterIdRecord = record { canister_id : principal };
-type CanisterStatusResponse = record {
-  status : CanisterStatusType;
-  memory_size : nat;
-  cycles : nat;
-  settings : DefiniteCanisterSettings;
-  query_stats : QueryStats;
-  idle_cycles_burned_per_day : nat;
-  module_hash : opt blob;
-  reserved_cycles : nat;
-};
-type CanisterStatusType = variant { stopped; stopping; running };
-type DefiniteCanisterSettings = record {
-  freezing_threshold : nat;
-  controllers : vec principal;
-  reserved_cycles_limit : nat;
-  memory_allocation : nat;
-  compute_allocation : nat;
-};
-type QueryStats = record {
-  response_payload_bytes_total : nat;
-  num_instructions_total : nat;
-  num_calls_total : nat;
-  request_payload_bytes_total : nat;
-};
-type RejectionCode = variant {
-  NoError;
-  CanisterError;
-  SysTransient;
-  DestinationInvalid;
-  Unknown;
-  SysFatal;
-  CanisterReject;
-};
-type Result = variant { Ok : CanisterData; Err : text };
-type Result_1 = variant {
-  Ok : record { CanisterStatusResponse };
-  Err : record { RejectionCode; text };
-};
-type Result_2 = variant { Ok : text; Err : text };
-type Result_3 = variant { Ok : blob; Err : text };
-type Result_4 = variant { Ok; Err : text };
+type Result = variant { Ok; Err : text };
 service : {
-  get_canister_info : (principal) -> (Result) query;
-  get_canister_status : (CanisterIdRecord) -> (Result_1);
-  get_canister_status_for_this_canister_id : () -> (Result_1);
-  get_cycles_balance_of_canister : () -> (Result_2);
-  get_memory_used_by_canister : () -> (Result_2);
-  get_module_hash_of_canister : () -> (Result_3);
-  get_storage : () -> (Result_1) query;
-  get_storage_2 : () -> (Result_1) query;
-  get_storage_3 : (CanisterIdRecord) -> (Result_1) query;
-  greet : (text) -> (text) query;
-  insert_canister_info : (principal, CanisterData) -> (Result_4);
+  get_all_timestamps : (principal) -> (
+      vec record { nat64; CanisterData },
+    ) query;
+  get_canister_map : (principal, nat64) -> (opt CanisterData) query;
+  set_canister_map : (principal, CanisterData) -> (Result) query;
 }
