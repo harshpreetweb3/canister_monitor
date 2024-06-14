@@ -13,7 +13,7 @@ use candid::Principal;
 use ic_cdk::{
     api::{call::CallResult, management_canister::{
         self,
-        main::{canister_status, CanisterId, CanisterIdRecord, CanisterStatusResponse}, 
+        main::{CanisterId, CanisterIdRecord, CanisterStatusResponse}, 
     }},
     export_candid,
 };
@@ -40,13 +40,13 @@ use ic_cdk::{
 // }
 
 
-//1. all matrices, fun for all mat..
-//2. store in a stable memory
-//3. each minute, call and store matric ; heartbeats
+//1. all matrices, fun for all mat..                                  done
+//2. store in a stable memory                                         done
+//3. each minute, call and store matric ; heartbeats                  
 //4, show matric // 5 minute, 10 min , from  frontend | graph
 //   graph for each
 
-//   get storage, get cycles, get module_hash
+//   get storage, get cycles, get module_hash                         done
 
 export_candid!();
 

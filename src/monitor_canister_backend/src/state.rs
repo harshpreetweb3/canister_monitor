@@ -32,6 +32,19 @@ impl State {
         }
     }
 
+    pub fn insert_canister_info_2(
+        &mut self,
+        canister_id: Principal,
+        can_data: CanisterData,
+    ) -> Option<CanisterData> {
+        let insertion_time = time();
+        ic_cdk::println!("{}", insertion_time);
+        let res = self
+            .canister_map
+            .insert((canister_id, insertion_time), can_data);
+        res
+    }
+
     pub fn get_canister_info(
         &self,
         canister_id: Principal,

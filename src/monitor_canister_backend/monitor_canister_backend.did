@@ -9,5 +9,6 @@ service : {
       vec record { nat64; CanisterData },
     ) query;
   get_canister_map : (principal, nat64) -> (opt CanisterData) query;
-  set_canister_map : (principal, CanisterData) -> (Result) query;
+  set_canister_map : (principal, CanisterData) -> (Result);
+  set_canister_map_2 : (principal, CanisterData) -> (opt CanisterData);
 }
