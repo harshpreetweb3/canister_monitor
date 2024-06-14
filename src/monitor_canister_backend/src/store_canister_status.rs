@@ -17,9 +17,10 @@ fn insert(canister_id : Principal, canister_data: CanisterData) -> Result<(), St
 
 #[query(name = "get_canister_info")]
 fn fetch(canister_id : Principal) -> Result<CanisterData, String> {
-    // let user_principal = caller();
+    
     STATE.with(|state| {
         let state = state.borrow();
         state.get_canister_data(canister_id)
     })
 }
+
