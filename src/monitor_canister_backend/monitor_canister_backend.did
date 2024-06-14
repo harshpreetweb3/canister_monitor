@@ -1,9 +1,8 @@
 type CanisterData = record {
   cycles : nat;
   memory_consumed : nat;
-  module_hash : text;
+  module_hash : opt blob;
 };
-type CanisterIdRecord = record { canister_id : principal };
 type CanisterStatusResponse = record {
   status : CanisterStatusType;
   memory_size : nat;
@@ -37,24 +36,22 @@ type RejectionCode = variant {
   SysFatal;
   CanisterReject;
 };
-type Result = variant { Ok : CanisterData; Err : text };
-type Result_1 = variant {
+type Result = variant {
   Ok : record { CanisterStatusResponse };
   Err : record { RejectionCode; text };
 };
-type Result_2 = variant { Ok : text; Err : text };
-type Result_3 = variant { Ok : blob; Err : text };
-type Result_4 = variant { Ok; Err : text };
-service : {
-  get_canister_info : (principal) -> (Result) query;
-  get_canister_status : (CanisterIdRecord) -> (Result_1);
-  get_canister_status_for_this_canister_id : () -> (Result_1);
-  get_cycles_balance_of_canister : () -> (Result_2);
-  get_memory_used_by_canister : () -> (Result_2);
-  get_module_hash_of_canister : () -> (Result_3);
-  get_storage : () -> (Result_1) query;
-  get_storage_2 : () -> (Result_1) query;
-  get_storage_3 : (CanisterIdRecord) -> (Result_1) query;
-  greet : (text) -> (text) query;
-  insert_canister_info : (principal, CanisterData) -> (Result_4);
+type Result_1 = variant { Ok : text; Err : text };
+type Result_2 = variant { Ok : blob; Err : text };
+type Result_3 = variant { Ok; Err : text };
+service : () -> {
+  get_all_timestamps : (principal) -> (
+      vec record { nat64; CanisterData },
+    ) query;
+  get_canister_map : (principal, nat64) -> (opt CanisterData) query;
+  get_canister_status : () -> ();
+  get_canister_status_for_this_canister_id : () -> (Result);
+  get_cycles_balance_of_canister : () -> (Result_1);
+  get_memory_used_by_canister : () -> (Result_1);
+  get_module_hash_of_canister : () -> (Result_2);
+  set_canister_map : (principal, CanisterData) -> (Result_3);
 }
