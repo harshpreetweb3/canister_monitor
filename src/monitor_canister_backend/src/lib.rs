@@ -27,12 +27,7 @@ use ic_cdk::{
 use ic_cdk_timers;
 use std::time::Duration;
 
-const N: Duration = Duration::from_secs(5);
-
-// async fn ring() -> String {
-//     ic_cdk::println!("Rust Timer Ring!");
-//     "Ring".to_string()
-// }
+const N: Duration = Duration::from_secs(60);
 
 #[ic_cdk::init]
 async fn init() {
@@ -91,3 +86,12 @@ export_candid!();
 //4, show matric // 5 minute, 10 min , from  frontend | graph
 //graph for each
 //get storage, get cycles
+//timespan eg 30 days or 60 days 
+//data of seconds
+
+// params of get_canister_data
+// no_of_secs
+// timestamp
+// return -> all the data between timestamp and timestamp - seconds
+
+// O log n time complexity should be there; logic

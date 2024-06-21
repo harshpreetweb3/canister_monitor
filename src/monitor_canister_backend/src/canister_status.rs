@@ -1,8 +1,9 @@
 use crate::{CallResult, CanisterId, CanisterIdRecord, CanisterStatusResponse, Principal};
+use hex;
 
 #[ic_cdk::update]
 pub async fn get_canister_status_for_this_canister_id() -> CallResult<(CanisterStatusResponse,)> {
-    let id: CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
+    let id: CanisterId = Principal::from_text("bkyz2-fmaaa-aaaaa-qaaaq-cai").unwrap();
 
     ic_cdk::println!("id : {}", id);
 
@@ -13,7 +14,7 @@ pub async fn get_canister_status_for_this_canister_id() -> CallResult<(CanisterS
 
 #[ic_cdk::update]
 pub async fn get_memory_used_by_canister() -> Result<String, String> {
-    let id: CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
+    let id: CanisterId = Principal::from_text("bkyz2-fmaaa-aaaaa-qaaaq-cai").unwrap();
 
     ic_cdk::println!("id : {}", id);
 
@@ -35,7 +36,7 @@ pub async fn get_memory_used_by_canister() -> Result<String, String> {
 
 #[ic_cdk::update]
 pub async fn get_cycles_balance_of_canister() -> Result<String, String> {
-    let id: CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
+    let id: CanisterId = Principal::from_text("bkyz2-fmaaa-aaaaa-qaaaq-cai").unwrap();
 
     ic_cdk::println!("id : {}", id);
 
@@ -56,8 +57,8 @@ pub async fn get_cycles_balance_of_canister() -> Result<String, String> {
 }
 
 #[ic_cdk::update]
-pub async fn get_module_hash_of_canister() -> Result<Vec<u8>, String> {
-    let id: CanisterId = Principal::from_text("br5f7-7uaaa-aaaaa-qaaca-cai").unwrap();
+pub async fn get_module_hash_of_canister() -> Result<String, String> {
+    let id: CanisterId = Principal::from_text("bkyz2-fmaaa-aaaaa-qaaaq-cai").unwrap();
 
     ic_cdk::println!("id : {}", id);
 
@@ -72,9 +73,9 @@ pub async fn get_module_hash_of_canister() -> Result<Vec<u8>, String> {
             let module_hash = res.module_hash;
 
             match module_hash {
-                Some(hash) => Ok(hash),
+                Some(hash) => Ok(hex::encode(hash)),
 
-                None => Err("unable to get memory hash".to_string()),
+                None => Err("unable to get module hash".to_string()),
             }
 
             // Ok(format!("cycles : {}", cycles))

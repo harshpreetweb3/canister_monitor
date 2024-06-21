@@ -44,10 +44,12 @@ impl State {
         &self,
         id: Principal,
     ) -> impl Iterator<Item = (u64, CanisterData)> + '_ {
+
         self.canister_map
             .range((id, u64::default())..)
             .take_while(move |((p, _), _)| *p == id)
             .map(|((_, s), t)| (s, t))
+            
     }
 
 }

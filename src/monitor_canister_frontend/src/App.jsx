@@ -1,30 +1,23 @@
-import { useState } from 'react';
-import { monitor_canister_backend } from 'declarations/monitor_canister_backend';
+import React from 'react';
+import MemoryChart from './MemoryChart'; 
+import CyclesConsumedChart from './CyclesConsumedChart';
+// import ModuleHashChart from './ModuleHashChart';
 
 function App() {
-  const [greeting, setGreeting] = useState('');
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    monitor_canister_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
-
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div className="App">
+      <header className="App-header">
+        <h1>Canister Memory Consumption</h1>
+        <p>Graph showing the memory consumption over time.</p>
+      </header>
+      <MemoryChart />
+
+      <header className="App-header">
+        <h1>Canister Cycle Consumption</h1>
+        <p>Graph showing the cycle consumption over time.</p>
+      </header>
+      <CyclesConsumedChart />
+    </div>
   );
 }
 

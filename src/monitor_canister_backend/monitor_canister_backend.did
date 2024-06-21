@@ -41,8 +41,7 @@ type Result = variant {
   Err : record { RejectionCode; text };
 };
 type Result_1 = variant { Ok : text; Err : text };
-type Result_2 = variant { Ok : blob; Err : text };
-type Result_3 = variant { Ok; Err : text };
+type Result_2 = variant { Ok; Err : text };
 service : () -> {
   get_all_timestamps : (principal) -> (
       vec record { nat64; CanisterData },
@@ -52,6 +51,6 @@ service : () -> {
   get_canister_status_for_this_canister_id : () -> (Result);
   get_cycles_balance_of_canister : () -> (Result_1);
   get_memory_used_by_canister : () -> (Result_1);
-  get_module_hash_of_canister : () -> (Result_2);
-  set_canister_map : (principal, CanisterData) -> (Result_3);
+  get_module_hash_of_canister : () -> (Result_1);
+  set_canister_map : (principal, CanisterData) -> (Result_2);
 }
