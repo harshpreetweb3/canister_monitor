@@ -5,13 +5,35 @@ use ic_stable_structures::StableBTreeMap;
 use ic_cdk::api::time;
 
 pub struct State {
-    pub canister_map: StableBTreeMap<(Principal, u64), CanisterData, Memory>
+    pub canister_map: StableBTreeMap<(Principal, u64), CanisterData, Memory>,
+    pub master_canister: StableBTreeMap<u8, Principal, Memory>,
+    pub slave_canisters: StableBTreeMap<Principal, u8, Memory>
 }
 impl State {
     pub fn new() -> Self {
         Self {
-            canister_map: init_canister_map()
+            canister_map: init_canister_map(),
+            master_canister: init_master_canister(),
+            slave_canisters: init_slave_canisters(),
         }
+    }
+
+    pub fn set_master(&mut self, canister_id: Principal) {
+        self.master_canister.insert(0, canister_id);
+    }
+
+    pub fn add_slave(&mut self, canister_id: Principal) {
+        self.slave_canisters.insert(canister_id, 0);
+    }
+
+    pub fn get_master(&self) -> Option<Principal> {
+        self.master_canister.get(&0)
+    }
+
+    pub fn get_slaves(&self) -> Vec<Principal> {
+        self.slave_canisters.iter()
+            .map(|(canister_id, _)| canister_id.clone())
+            .collect()
     }
 
     pub fn insert_canister_info(
@@ -62,4 +84,12 @@ impl Default for State {
 
 fn init_canister_map() -> StableBTreeMap<(Principal, u64), CanisterData, Memory> {
     StableBTreeMap::init(crate::memory::get_canister_map_memory())
+}
+
+fn init_master_canister() -> StableBTreeMap<u8, Principal, Memory> {
+    StableBTreeMap::init(crate::memory::get_master_canister_memory())
+}
+
+fn init_slave_canisters() -> StableBTreeMap<Principal, u8, Memory> {
+    StableBTreeMap::init(crate::memory::get_slave_canisters_memory())
 }

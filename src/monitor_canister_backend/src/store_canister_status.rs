@@ -3,7 +3,9 @@ use crate::{CanisterData, State, Principal};
 use std::cell::RefCell;
 
 thread_local! {
+
     static STATE: RefCell<State> = RefCell::new(State::new());
+    
 }
 
 #[update(name = "set_canister_map")]
@@ -22,7 +24,7 @@ fn get_canister_map(canister_id: Principal, time: u64) -> Option<CanisterData> {
     STATE.with(|state| {
         let state = state.borrow();
         state.get_canister_info(canister_id, time)
-    })
+    })  
 }
 
 #[query(name = "get_all_timestamps")]

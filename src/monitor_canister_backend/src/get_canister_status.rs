@@ -3,7 +3,7 @@ use crate::{
 };
 
 #[ic_cdk::update]
-pub async fn get_canister_status() {
+pub async fn get_canister_status() -> Result<CanisterData, String>{
     let arg = CanisterIdRecord {
         canister_id: ic_cdk::api::id(),
     };
@@ -27,12 +27,13 @@ pub async fn get_canister_status() {
 
             let stored = set_canister_map(can_id, can_data.clone());
 
-            ic_cdk::println!("after_storage_in_stableBTree {:?}", stored)
+            ic_cdk::println!("after_storage_in_stableBTree {:?}", stored);
 
-            // Ok(stored)
+            Ok(can_data)
         }
         Err(err) => {
-            ic_cdk::println!("this is error {:?}", err)
+            ic_cdk::println!("this is error {:?}", err);
+            Err(format!("this is error {:?}", err))
         }
     }
 }

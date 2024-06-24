@@ -1,10 +1,12 @@
-mod canister_status;
-mod memory;
 mod state;
-mod store_canister_status;
 mod types;
-
+mod memory;
+mod canister_status;
 mod get_canister_status;
+mod store_canister_status;
+mod canister_management;
+
+
 
 use get_canister_status::get_canister_status;
 use memory::*;
@@ -28,13 +30,64 @@ use ic_cdk_timers;
 use std::time::Duration;
 
 const N: Duration = Duration::from_secs(60);
+const THRESHOLD: u64 = 350 * 1024 * 1024 * 1024; // 350GB in bytes
+
+// #[ic_cdk::init]
+// async fn init() {
+//     ic_cdk_timers::set_timer_interval(N, || {
+//         ic_cdk::spawn(get_canister_status());
+//     });
+// }
 
 #[ic_cdk::init]
 async fn init() {
     ic_cdk_timers::set_timer_interval(N, || {
-        ic_cdk::spawn(get_canister_status());
+        ic_cdk::spawn(async {
+            if let Err(err) = check_storage_threshold().await {
+                ic_cdk::println!("Error in threshold check: {:?}", err);
+            }
+        });
     });
 }
+
+export_candid!();
+
+async fn check_storage_threshold() -> Result<(), String> {
+    let canister_status = get_canister_status().await?;
+    let memory_used = canister_status.memory_consumed;
+
+    if memory_used >= THRESHOLD {
+        // Create a new master canister
+        let new_canister_id = canister_management::create_new_canister().await?;
+        canister_management::update_canister_roles(new_canister_id).await?;
+    }
+
+    Ok(())
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //without CallResult return type
 // #[ic_cdk::query]
@@ -76,8 +129,6 @@ async fn init() {
 // pub async fn get_canister_status(arg: CanisterIdRecord) -> CallResult<(CanisterStatusResponse,)> {
 //     ic_cdk::call(Principal::management_canister(), "canister_status", (arg,)).await
 // }
-
-export_candid!();
 
 // get remaining cycles from canister_status
 //1. all matrices, fun for all mat..
