@@ -8,6 +8,8 @@ pub async fn get_canister_status() -> Result<CanisterData, String>{
         canister_id: ic_cdk::api::id(),
     };
 
+    ic_cdk::println!("CANISTER STATUS OF CANISTER_ID IS BEING CHECKED {}", arg.canister_id.clone());
+
     let can_status: CallResult<(CanisterStatusResponse,)> =
         ic_cdk::call(Principal::management_canister(), "canister_status", (arg,)).await;
 

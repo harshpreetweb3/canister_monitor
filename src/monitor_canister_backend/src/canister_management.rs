@@ -1,6 +1,9 @@
 use candid::Principal;
 
-use ic_cdk::api::management_canister::main::{deposit_cycles, install_code, CanisterIdRecord, CanisterInstallMode, CanisterSettings, CreateCanisterArgument, InstallCodeArgument, UpdateSettingsArgument};
+use ic_cdk::api::management_canister::main::{
+    deposit_cycles, install_code, CanisterIdRecord, CanisterInstallMode, CanisterSettings,
+    CreateCanisterArgument, InstallCodeArgument, UpdateSettingsArgument,
+};
 
 use crate::state::*;
 use ic_cdk::api::call::CallResult;
@@ -17,18 +20,32 @@ const INITIAL_CYCLES: u128 = 1_000_000_000_000;
 pub async fn create_new_canister() -> Result<Principal, String> {
     let args = CreateCanisterArgument::default();
 
-    let create_response: CallResult<(CanisterIdRecord,)> =
-        ic_cdk::call(Principal::management_canister(), "create_canister", (args,)).await;
+    let create_response: CallResult<(CanisterIdRecord,)> = ic_cdk::call(
+        Principal::management_canister(),
+        "create_canister",
+        (args, INITIAL_CYCLES),
+    )
+    .await;
 
     match create_response {
         Ok(res) => {
             let res = res.0;
 
-             // Deposit initial cycles to the new canister
-             let _deposit_cycle = deposit_initial_cycles(res.canister_id.clone()).await?;
+            ic_cdk::println!(
+                "newly created canister has this id {}",
+                res.canister_id.clone()
+            );
+
+            // Deposit initial cycles to the new canister
+            // let _deposit_cycle = deposit_initial_cycles(res.canister_id.clone()).await?;
 
             // Install the code on the new canister
-            let _install_code = install_code_on_new_canister(res.canister_id.clone()).await;
+            let install_code = install_code_on_new_canister(res.canister_id.clone()).await;
+
+            ic_cdk::println!(
+                "result after installing code to new_canister {:?}",
+                install_code
+            );
 
             Ok(res.canister_id.clone())
         }
@@ -37,20 +54,31 @@ pub async fn create_new_canister() -> Result<Principal, String> {
 }
 
 async fn deposit_initial_cycles(canister_id: Principal) -> Result<(), String> {
+    let id = CanisterIdRecord { canister_id };
 
-    let id = CanisterIdRecord{
-        canister_id
-    };
+    let deposit_result = deposit_cycles(id, INITIAL_CYCLES)
+        .await
+        .map_err(|(code, msg)| {
+            format!(
+                "Failed to deposit cycles to canister {}: {}: {}",
+                canister_id, code as u8, msg
+            )
+        });
 
+    ic_cdk::println!(
+        "result after depositing cycles to the new_canister {:?}",
+        deposit_result
+    );
 
-    deposit_cycles(id, INITIAL_CYCLES).await.map_err(|(code, msg)| {
-        format!("Failed to deposit cycles to canister {}: {}: {}", canister_id, code as u8, msg)
-    })
+    deposit_result
 }
-async fn install_code_on_new_canister(canister_id: Principal) -> Result<(), String> {
 
-    let wasm_module : Vec<u8> = include_bytes!("../../../.dfx/local/canisters/monitor_canister_backend/monitor_canister_backend.wasm").to_vec();
-    
+async fn install_code_on_new_canister(canister_id: Principal) -> Result<(), String> {
+    let wasm_module : Vec<u8> = include_bytes!("/home/harshpreet-singh/Documents/new-project/monitor_canister/target/wasm32-unknown-unknown/release/monitor_canister_backend.wasm").to_vec();
+
+    ic_cdk::println!("wasm module in vector form {:?}", wasm_module);
+
+    ic_cdk::println!("wasm module size: {}", wasm_module.len());
 
     let install_args = InstallCodeArgument {
         mode: CanisterInstallMode::Install,
@@ -59,9 +87,16 @@ async fn install_code_on_new_canister(canister_id: Principal) -> Result<(), Stri
         arg: vec![],
     };
 
+    ic_cdk::println!("before call install_code fn");
+
     install_code(install_args).await.map_err(|(code, msg)| {
-        format!("Failed to install code on canister {}: {}: {}", canister_id, code as u8, msg)
+        format!(
+            "Failed to install code on canister {}: {}: {}",
+            canister_id, code as u8, msg
+        )
     })?;
+
+    ic_cdk::println!("after calling install_code fn");
 
     Ok(())
 }
@@ -85,7 +120,10 @@ async fn update_settings(canister_id: Principal, is_master: bool) -> Result<(), 
 
     let who_is_becoming_controller = ic_cdk::api::caller();
 
-    ic_cdk::println!("who_is_becoming_controller {}", who_is_becoming_controller);
+    ic_cdk::println!(
+        "who_is_becoming_controller : dekhde aan kon bnda controller canister da {}",
+        who_is_becoming_controller
+    );
 
     let settings = CanisterSettings {
         controllers: Some(vec![ic_cdk::api::caller()]), // Wrap caller Principal in a vector

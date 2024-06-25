@@ -19,21 +19,31 @@ impl State {
     }
 
     pub fn set_master(&mut self, canister_id: Principal) {
+
+        ic_cdk::println!("new master canister formed {}", canister_id.clone());
+
         self.master_canister.insert(0, canister_id);
     }
 
     pub fn add_slave(&mut self, canister_id: Principal) {
+
+        ic_cdk::println!("new slave canister formed {}", canister_id.clone());
+
         self.slave_canisters.insert(canister_id, 0);
     }
 
     pub fn get_master(&self) -> Option<Principal> {
+
         self.master_canister.get(&0)
+
     }
 
     pub fn get_slaves(&self) -> Vec<Principal> {
+
         self.slave_canisters.iter()
             .map(|(canister_id, _)| canister_id.clone())
             .collect()
+            
     }
 
     pub fn insert_canister_info(

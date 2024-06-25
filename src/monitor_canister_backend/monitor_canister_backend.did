@@ -36,21 +36,25 @@ type RejectionCode = variant {
   SysFatal;
   CanisterReject;
 };
-type Result = variant {
+type Result = variant { Ok : principal; Err : text };
+type Result_1 = variant { Ok : CanisterData; Err : text };
+type Result_2 = variant {
   Ok : record { CanisterStatusResponse };
   Err : record { RejectionCode; text };
 };
-type Result_1 = variant { Ok : text; Err : text };
-type Result_2 = variant { Ok; Err : text };
+type Result_3 = variant { Ok : text; Err : text };
+type Result_4 = variant { Ok; Err : text };
 service : () -> {
+  create_new_canister : () -> (Result);
   get_all_timestamps : (principal) -> (
       vec record { nat64; CanisterData },
     ) query;
   get_canister_map : (principal, nat64) -> (opt CanisterData) query;
-  get_canister_status : () -> ();
-  get_canister_status_for_this_canister_id : () -> (Result);
-  get_cycles_balance_of_canister : () -> (Result_1);
-  get_memory_used_by_canister : () -> (Result_1);
-  get_module_hash_of_canister : () -> (Result_1);
-  set_canister_map : (principal, CanisterData) -> (Result_2);
+  get_canister_status : () -> (Result_1);
+  get_canister_status_for_this_canister_id : () -> (Result_2);
+  get_cycles_balance_of_canister : () -> (Result_3);
+  get_memory_used_by_canister : () -> (Result_3);
+  get_module_hash_of_canister : () -> (Result_3);
+  set_canister_map : (principal, CanisterData) -> (Result_4);
+  update_canister_roles : (principal) -> (Result_4);
 }

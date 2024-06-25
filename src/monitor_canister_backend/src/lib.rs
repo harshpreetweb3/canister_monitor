@@ -30,7 +30,12 @@ use ic_cdk_timers;
 use std::time::Duration;
 
 const N: Duration = Duration::from_secs(60);
-const THRESHOLD: u64 = 350 * 1024 * 1024 * 1024; // 350GB in bytes
+
+// const THRESHOLD: u64 = 350 * 1024 * 1024 * 1024; // 350GB in bytes
+
+// const THRESHOLD: u64 = 20971520; // 20 MB in bytes
+
+const THRESHOLD: u64 = 11534336;
 
 // #[ic_cdk::init]
 // async fn init() {
