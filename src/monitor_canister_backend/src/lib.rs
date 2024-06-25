@@ -29,7 +29,7 @@ use ic_cdk::{
 use ic_cdk_timers;
 use std::time::Duration;
 
-const N: Duration = Duration::from_secs(60);
+const N: Duration = Duration::from_secs(150);
 
 // const THRESHOLD: u64 = 350 * 1024 * 1024 * 1024; // 350GB in bytes
 
